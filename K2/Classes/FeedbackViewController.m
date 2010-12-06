@@ -182,14 +182,17 @@
 
 - (void)showMailController {
 	
-	//TODO: Extract feedback contact info from .plist
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *subject = [[settingsDictionary objectForKey:@"FeedBack"] objectForKey:@"Subject"];
+	NSString *to = [[settingsDictionary objectForKey:@"FeedBack"] objectForKey:@"To"];
+	
 	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
 	controller.mailComposeDelegate = self;
 	[controller setBccRecipients:nil];
 	[controller setCcRecipients:nil];
-	[controller setSubject:@"K2 iPhone App Feedback"];
+	[controller setSubject:subject];
 	[controller setMessageBody:@"" isHTML:NO]; 
-	[controller setToRecipients:[NSArray arrayWithObject:@"paul@txmma.com"]];
+	[controller setToRecipients:[NSArray arrayWithObject:to]];
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
 	

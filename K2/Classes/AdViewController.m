@@ -27,9 +27,8 @@
 #pragma mark AdMobDelegate methods
 
 - (NSString *)publisherIdForAd:(AdMobView *)adView {
-  //TODO: extract this value from .plist
-  //return @"a14ca3b8226c7de"; // this should be prefilled; if not, get it from www.admob.com
-  return @"a14c756d678884e";
+   NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+   return [settingsDictionary objectForKey:@"AdMobId"];
 }
 
 - (UIViewController *)currentViewControllerForAd:(AdMobView *)adView {
