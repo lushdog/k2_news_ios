@@ -13,5 +13,9 @@
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *feedbackTableView;
-- (void)showMailController;
+
+- (void)showFeedBackMailController;
+- (void)showShareAppMailController;
+- (void)showSendCouponMailController;
+
 @end

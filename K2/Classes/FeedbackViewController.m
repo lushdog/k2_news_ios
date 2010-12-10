@@ -46,7 +46,7 @@
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section  {
 	
-	return 1;
+	return 3;
 }
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -69,8 +69,27 @@
 				label.font = [UIFont systemFontOfSize:17.0f];
 				[cell.contentView addSubview:label];
 				[label release];
+				break;
 				
 			}
+			case 1: {
+				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+				label.text = @"Share App With A Friend";
+				label.font = [UIFont systemFontOfSize:17.0f];
+				[cell.contentView addSubview:label];
+				[label release];
+				break;
+				
+			}
+			case 2: {
+				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+				label.text = @"Send Friend A Coupon";
+				label.font = [UIFont systemFontOfSize:17.0f];
+				[cell.contentView addSubview:label];
+				[label release];			
+				break;
+			}				
+				
 			default:
 				break;
 		}
@@ -143,9 +162,13 @@
 // Called after the user changes the selection.
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-	if (indexPath.row == 0)  {
-		[self showMailController];		
-	}
+	if (indexPath.row == 0)  
+		[self showFeedBackMailController];		
+	else if (indexPath.row == 1)
+		[self showShareAppMailController];
+	else if (indexPath.row == 2)
+		[self showSendCouponMailController];
+	
 }
 
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
@@ -180,7 +203,7 @@
 	[self.navigationController popViewControllerAnimated:YES];	
 }
 
-- (void)showMailController {
+- (void)showFeedBackMailController {
 	
 	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
 	NSString *subject = [[settingsDictionary objectForKey:@"FeedBack"] objectForKey:@"Subject"];
@@ -193,6 +216,55 @@
 	[controller setSubject:subject];
 	[controller setMessageBody:@"" isHTML:NO]; 
 	[controller setToRecipients:[NSArray arrayWithObject:to]];
+	[self presentModalViewController:controller animated:YES];
+	[controller release];
+	
+}
+
+- (void)showShareAppMailController {
+	
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *subject = [[settingsDictionary objectForKey:@"ShareApp"] objectForKey:@"Subject"];
+	NSString *body = [[settingsDictionary objectForKey:@"ShareApp"] objectForKey:@"Body"];
+	NSString *appUrl = [settingsDictionary objectForKey:@"iTunesLink"];
+	NSString *contents = [NSString stringWithFormat:@"%@%@<a href=\"%@\">%@</a>", body, @"\n\n", appUrl, appUrl];
+	
+	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+	controller.mailComposeDelegate = self;
+	[controller setBccRecipients:nil];
+	[controller setCcRecipients:nil];
+	[controller setSubject:subject];
+	[controller setMessageBody:contents isHTML:YES]; 
+	[self presentModalViewController:controller animated:YES];
+	[controller release];
+	
+}
+
+- (void)showSendCouponMailController {
+	
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *subject = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"Subject"];
+	NSString *imageUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"ImageUrl"];
+	NSString *linkUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"LinkUrl"];
+	NSString *contents = [NSString stringWithFormat:@"Here's a coupon I think you'd be interested in.  Click <a href=\"%@\">here</a> to visit the website.", linkUrl];
+	
+	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]
+											  cachePolicy:NSURLRequestUseProtocolCachePolicy
+										  timeoutInterval:20.0];
+	
+	NSData *couponImageData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:nil error:nil];
+	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
+	controller.mailComposeDelegate = self;
+	[controller setBccRecipients:nil];
+	[controller setCcRecipients:nil];
+	[controller setSubject:subject];
+	[controller setMessageBody:contents isHTML:YES];
+	
+	if (couponImageData)  {
+		[controller addAttachmentData:couponImageData mimeType:@"img/png" fileName:@"coupon.jpg"];
+		
+	}
+	
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
 	
@@ -218,7 +290,7 @@
 
 - (void)dealloc {
 	[feedbackTableView release];
-    [super dealloc];
+	[super dealloc];
 }
 
 

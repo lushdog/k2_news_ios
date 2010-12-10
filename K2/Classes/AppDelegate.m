@@ -56,7 +56,7 @@ feedbackNavigationController, splashScreenViewController;
 	feedNavigationController = [[UINavigationController alloc] initWithRootViewController:categoryViewController];
 	
 	feedbackViewController = [[FeedbackViewController alloc] initWithNibName:@"FeedbackView" bundle:[NSBundle mainBundle]];
-	feedbackViewController.title = @"Feedback";
+	feedbackViewController.title = @"Share";
 	feedbackViewController.tabBarItem.image = [UIImage imageNamed:@"more.png"];
 	feedbackNavigationController = [[UINavigationController alloc] initWithRootViewController:feedbackViewController];
 	
