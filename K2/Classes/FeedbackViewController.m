@@ -46,7 +46,7 @@
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section  {
 	
-	return 3;
+	return 4;
 }
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -89,7 +89,14 @@
 				[label release];			
 				break;
 			}				
-				
+			case 3: {
+				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+				label.text = @"Facebook Page";
+				label.font = [UIFont systemFontOfSize:17.0f];
+				[cell.contentView addSubview:label];
+				[label release];			
+				break;
+			}
 			default:
 				break;
 		}
@@ -168,6 +175,8 @@
 		[self showShareAppMailController];
 	else if (indexPath.row == 2)
 		[self showSendCouponMailController];
+	else if (indexPath.row == 3)
+		[self openFacebook];
 	
 }
 
@@ -246,7 +255,7 @@
 	NSString *subject = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"Subject"];
 	NSString *imageUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"ImageUrl"];
 	NSString *linkUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"LinkUrl"];
-	NSString *contents = [NSString stringWithFormat:@"Here's a coupon I think you'd be interested in.  Click <a href=\"%@\">here</a> to visit the website.", linkUrl];
+	NSString *contents = [NSString stringWithFormat:@"Here's something I'd think you'd be interested in.  Click <a href=\"%@\">here</a> to visit the website.", linkUrl];
 	
 	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]
 											  cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -268,6 +277,12 @@
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
 	
+}
+
+-(void)openFacebook {
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *facebookUrl = [settingsDictionary objectForKey:@"FacebookUrl"];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:facebookUrl]];	
 }
 
 - (void)didReceiveMemoryWarning {

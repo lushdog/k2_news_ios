@@ -17,5 +17,5 @@
 - (void)showFeedBackMailController;
 - (void)showShareAppMailController;
 - (void)showSendCouponMailController;
-
+- (void)openFacebook;
 @end
