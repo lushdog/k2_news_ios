@@ -46,7 +46,7 @@
 
 - (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section  {
 	
-	return 4;
+	return 6;
 }
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -92,6 +92,22 @@
 			case 3: {
 				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Facebook Page";
+				label.font = [UIFont systemFontOfSize:17.0f];
+				[cell.contentView addSubview:label];
+				[label release];			
+				break;
+			}
+			case 4: {
+				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+				label.text = @"Call Ottawa Dojo";
+				label.font = [UIFont systemFontOfSize:17.0f];
+				[cell.contentView addSubview:label];
+				[label release];			
+				break;
+			}
+			case 5: {
+				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+				label.text = @"Call Parkdale Dojo";
 				label.font = [UIFont systemFontOfSize:17.0f];
 				[cell.contentView addSubview:label];
 				[label release];			
@@ -177,6 +193,11 @@
 		[self showSendCouponMailController];
 	else if (indexPath.row == 3)
 		[self openFacebook];
+	else if (indexPath.row == 4)
+		[self callNumberOne];
+	else if (indexPath.row == 5)
+		[self callNumberTwo];
+
 	
 }
 
@@ -283,6 +304,23 @@
 	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
 	NSString *facebookUrl = [settingsDictionary objectForKey:@"FacebookUrl"];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:facebookUrl]];	
+}
+
+-(void) callNumberOne {
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *phoneNumber = [settingsDictionary objectForKey:@"PhoneNumber1"];
+	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
+	NSLog(@"Phoning: %@", fullPhoneNumber);
+}
+
+
+-(void) callNumberTwo {
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *phoneNumber = [settingsDictionary objectForKey:@"PhoneNumber2"];
+	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
+	NSLog(@"Phoning: %@", fullPhoneNumber);
 }
 
 - (void)didReceiveMemoryWarning {

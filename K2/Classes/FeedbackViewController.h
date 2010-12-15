@@ -18,4 +18,6 @@
 - (void)showShareAppMailController;
 - (void)showSendCouponMailController;
 - (void)openFacebook;
+- (void)callNumberOne;
+- (void)callNumberTwo;
 @end
