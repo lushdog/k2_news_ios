@@ -822,16 +822,23 @@
 	return date;
 }
 
-//TODO: scan all image links found during feed item parsing  into array?
 - (NSString*) scanForImage:(NSString *)stringToScan {
 	NSString *imgUrl = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:currentText];
 	
 	if ([scanner scanUpToString:@"<img" intoString:NULL])  {								
-		if ([scanner scanUpToString:@"src=\"" intoString:NULL])  {	
+		if ([scanner scanUpToString:@"src=" intoString:NULL])  {			
 			[scanner setScanLocation:[scanner scanLocation] + 5];
-			[scanner scanUpToString:@"\"" intoString:&imgUrl];
+			NSCharacterSet *endSrcTag = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
+			[scanner scanUpToCharactersFromSet:endSrcTag intoString:&imgUrl];	
+			[NSCharacterSet release];
 		}
+	}
+	
+	NSString *trackingImage = @"https://blogger.googleusercontent.com/tracker/";
+	NSRange range = [imgUrl rangeOfString : trackingImage];	
+	if (range.location != NSNotFound) {
+		imgUrl = nil;
 	}
 	
 	[NSScanner release];

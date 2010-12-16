@@ -83,7 +83,7 @@
 			}
 			case 2: {
 				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
-				label.text = @"Send Friend A Coupon";
+				label.text = @"Give a Free Trial";
 				label.font = [UIFont systemFontOfSize:17.0f];
 				[cell.contentView addSubview:label];
 				[label release];			
@@ -107,7 +107,7 @@
 			}
 			case 5: {
 				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
-				label.text = @"Call Parkdale Dojo";
+				label.text = @"Call Barrhaven Dojo";
 				label.font = [UIFont systemFontOfSize:17.0f];
 				[cell.contentView addSubview:label];
 				[label release];			
@@ -274,15 +274,15 @@
 	
 	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
 	NSString *subject = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"Subject"];
-	NSString *imageUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"ImageUrl"];
+	//NSString *imageUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"ImageUrl"];
 	NSString *linkUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"LinkUrl"];
 	NSString *contents = [NSString stringWithFormat:@"Here's something I'd think you'd be interested in.  Click <a href=\"%@\">here</a> to visit the website.", linkUrl];
 	
-	NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]
-											  cachePolicy:NSURLRequestUseProtocolCachePolicy
-										  timeoutInterval:20.0];
-	
-	NSData *couponImageData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:nil error:nil];
+	//NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]
+											  //cachePolicy:NSURLRequestUseProtocolCachePolicy
+										  //timeoutInterval:20.0];
+	NSData *couponImageData = nil;
+	//NSData *couponImageData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse:nil error:nil];
 	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
 	controller.mailComposeDelegate = self;
 	[controller setBccRecipients:nil];
