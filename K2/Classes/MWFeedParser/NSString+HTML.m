@@ -29,8 +29,8 @@
 	NSMutableString *result = [[NSMutableString alloc] initWithCapacity:self.length];
 	NSScanner *scanner = [[NSScanner alloc] initWithString:self];
 	[scanner setCharactersToBeSkipped:nil];
-	[scanner setCaseSensitive:YES];
-	NSString *str = nil, *tagName = nil;
+	[scanner setCaseSensitive:YES]; 
+	NSString *str = nil, *tagName = nil, *inlineTagName = nil;
 	BOOL dontReplaceTagWithSpace = NO;
 	BOOL replaceTagWithLineBreak = NO;
 	
@@ -52,17 +52,22 @@
 				[scanner scanUpToString:@"-->" intoString:NULL]; 
 				[scanner scanString:@"-->" intoString:NULL];
 				
-			} else {
+			} 
+			else {
 				
-				// Tag - remove up to closing tag
-				if ([scanner scanString:@"/" intoString:NULL]) {
+				inlineTagName = nil;
+				
+				// Is this a closing tag?
+				if ([scanner scanString:@"/" intoString:NULL] || [scanner scanString:@"br" intoString:&inlineTagName]) {
 					
-					// Closing tag 
 					tagName = nil; 
 					dontReplaceTagWithSpace = NO; 
 					replaceTagWithLineBreak = NO;
 					
-					if ([scanner scanCharactersFromSet:tagNameCharacters intoString:&tagName]) {
+					if (inlineTagName != nil)
+						tagName = inlineTagName;
+										
+					if (tagName != nil || [scanner scanCharactersFromSet:tagNameCharacters intoString:&tagName]) {
 						
 						tagName = [tagName lowercaseString];
 						
@@ -88,7 +93,6 @@
 												   [tagName isEqualToString:@"label"]);
 					
 					
-							// Replace tag with string unless it was an inline
 							if (!dontReplaceTagWithSpace && result.length > 0 && ![scanner isAtEnd]) {
 								[result appendString:@" "];
 							}
@@ -102,7 +106,8 @@
 				
 			}
 			
-		} else {
+		} 
+		else {
 			
 			// Stopped at whitespace - replace all whitespace and newlines with a space
 			if ([scanner scanCharactersFromSet:newLineAndWhitespaceCharacters intoString:NULL]) {
