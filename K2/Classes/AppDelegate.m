@@ -11,6 +11,7 @@
 #import "SplashScreenViewController.h"
 #import "TabBarViewController.h"
 #import <MessageUI/MessageUI.h> 
+#import <MediaPlayer/MediaPlayer.h>
 
 @implementation AppDelegate
 
@@ -65,12 +66,11 @@ feedbackNavigationController, splashScreenViewController;
 	[tabItems release];
 	
 	[window addSubview:tabBarController.view];
-	[tabBarController presentModalViewController:splashScreenViewController animated:NO];
-	float secondsToWait = 3.0f;
-	#ifdef DEBUG 
-		secondsToWait = 1.0f;
-	#endif
-	[tabBarController performSelector:@selector(removeSplashScreen) withObject:nil afterDelay:secondsToWait];
+	splashScreenViewController.tabControllerContainer = tabBarController;
+	
+	if ( kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iPhoneOS_3_2 ) {
+		[tabBarController presentModalViewController:splashScreenViewController animated:YES];
+	}
 	[window makeKeyAndVisible];
 	return YES;
 }

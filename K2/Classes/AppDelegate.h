@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 #import "FeedViewController.h"
 #import "CategoryViewController.h"
 #import "FeedbackViewController.h"
@@ -16,7 +17,7 @@
 
 @interface AppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
-    UITabBarController *tabBarController;
+    TabBarViewController *tabBarController;
 	UINavigationController *homeViewNavigationController;
 	FeedViewController *homeViewController;
 	UINavigationController *feedNavigationController;
@@ -29,7 +30,7 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, retain) IBOutlet TabBarViewController *tabBarController;
 @property (nonatomic, retain) IBOutlet FeedViewController *homeViewController;
 @property (nonatomic, retain) IBOutlet UINavigationController *homeViewNavigationController;
 @property (nonatomic, retain) IBOutlet UINavigationController	*feedNavigationController;
