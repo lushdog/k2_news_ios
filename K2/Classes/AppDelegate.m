@@ -69,7 +69,7 @@ feedbackNavigationController, splashScreenViewController;
 	splashScreenViewController.tabControllerContainer = tabBarController;
 	
 	if ( kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iPhoneOS_3_2 ) {
-		[tabBarController presentModalViewController:splashScreenViewController animated:YES];
+		[tabBarController presentModalViewController:splashScreenViewController animated:NO];
 	}
 	[window makeKeyAndVisible];
 	return YES;

@@ -7,6 +7,7 @@
 
 #import "SplashScreenViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "GDataPhotos.h"
 
 @implementation SplashScreenViewController
 
@@ -26,7 +27,14 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     
-	NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"mp4"];
+	GDataServiceGooglePhotos *photoService = [[GDataServiceGooglePhotos alloc] init];
+	[photoService setUserCredentialsWithUsername:@"k2martialartsottawa" 
+										password:@"k2martialarts@123"];
+	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
+	GDataServiceTicket *ticket = [photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithFeed:error:)];
+		
+	//TODO: load from .plist
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"m4v"];
 	NSURL *url = [NSURL fileURLWithPath:path];
 	player = [[MPMoviePlayerController alloc] initWithContentURL:url];
 	player.view.frame = self.view.frame;
@@ -37,6 +45,20 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlay:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
 	[player play];
 	[super viewDidLoad];		
+}
+
+- (void)ticket:(GDataServiceTicket *)ticket 
+		finishedWithFeed:(GDataFeedPhotoAlbum *)feed 
+		error:(NSError *) error  {
+	
+	if (error)
+		NSLog(@"Error retrieving photo albums: %@", error);
+	else {
+		NSArray *albums = [feed entries];
+		for(GDataEntryPhotoAlbum *album in albums)  {
+			NSLog(@"Found album: %@", [[album title] contentStringValue]);
+		}
+	}	
 }
 
 - (void)endPlay:(NSNotification*)notification {
