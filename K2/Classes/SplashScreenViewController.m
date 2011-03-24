@@ -11,7 +11,7 @@
 
 @implementation SplashScreenViewController
 
-@synthesize player, tabControllerContainer;
+@synthesize player, tabControllerContainer, photoService;
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -27,11 +27,12 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     
-	GDataServiceGooglePhotos *photoService = [[GDataServiceGooglePhotos alloc] init];
+	photoService = [[GDataServiceGooglePhotos alloc] init];
 	[photoService setUserCredentialsWithUsername:@"k2martialartsottawa" 
 										password:@"k2martialarts@123"];
 	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
-	GDataServiceTicket *ticket = [photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithFeed:error:)];
+	[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithAlbumsFeed:error:)];
+	
 		
 	//TODO: load from .plist
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"m4v"];
@@ -48,17 +49,40 @@
 }
 
 - (void)ticket:(GDataServiceTicket *)ticket 
-		finishedWithFeed:(GDataFeedPhotoAlbum *)feed 
+		finishedWithAlbumsFeed:(GDataFeedPhotoAlbum *)feed 
 		error:(NSError *) error  {
 	
 	if (error)
 		NSLog(@"Error retrieving photo albums: %@", error);
+	else if ([[feed entries] count] == 0) 
+		NSLog(@"No albums found");
 	else {
 		NSArray *albums = [feed entries];
 		for(GDataEntryPhotoAlbum *album in albums)  {
 			NSLog(@"Found album: %@", [[album title] contentStringValue]);
+			NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:[album GPhotoID] albumName:nil photoID:nil kind:@"photo" access:nil];
+			[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithPhotosFeed:error:)];
 		}
 	}	
+}
+
+- (void)ticket:(GDataServiceTicket *)ticket 
+		finishedWithPhotosFeed:(GDataFeedPhoto *)feed 
+		 error:(NSError *)error  {
+	
+	if (error)
+		NSLog(@"Error retrieveing photo: %@", error);
+	else if ([[feed entries] count] == 0) 
+		NSLog(@"No photos for album: %@", [feed title]);
+	else {
+		NSArray *photos = [feed entries];
+		for (GDataEntryPhoto *photo in photos)  {
+			NSLog(@"Found photo: '%@' with tag '%@'", [[photo title] contentStringValue], 
+													  [[photo photoDescription] contentStringValue]);
+		}
+	}
+		
+	
 }
 
 - (void)endPlay:(NSNotification*)notification {
