@@ -68,8 +68,7 @@
 
 - (void)ticket:(GDataServiceTicket *)ticket 
 		finishedWithPhotosFeed:(GDataFeedPhoto *)feed 
-		 error:(NSError *)error  {
-	
+		 error:(NSError *)error  {	
 	if (error)
 		NSLog(@"Error retrieveing photo: %@", error);
 	else if ([[feed entries] count] == 0) 
@@ -80,9 +79,7 @@
 			NSLog(@"Found photo: '%@' with tag '%@'", [[photo title] contentStringValue], 
 													  [[photo photoDescription] contentStringValue]);
 		}
-	}
-		
-	
+	}	
 }
 
 - (void)endPlay:(NSNotification*)notification {

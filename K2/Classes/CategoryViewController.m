@@ -93,7 +93,8 @@
 	
 	if (cell == nil) {		
 		NSArray *topLevelObjects = [[NSBundle mainBundle]loadNibNamed:CellIdentifier owner:nil options:nil];
-		cell = (CategoryViewCell*)[topLevelObjects objectAtIndex:0];	}
+		cell = (CategoryViewCell*)[topLevelObjects objectAtIndex:0];	
+	}
 		
 	if (feedList.count > 0) {
 		Feed *feed = [feedList objectAtIndex:indexPath.row];
