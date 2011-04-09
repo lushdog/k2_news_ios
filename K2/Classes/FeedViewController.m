@@ -17,7 +17,6 @@
 @synthesize imageCache;
 @synthesize feed;
 @synthesize loadingOverlay;
-@synthesize adViewController; 
 
 #pragma mark -
 #pragma mark TableViewDelegate
@@ -301,7 +300,6 @@
 	[imageCache release];
 	[feed release];
 	[loadingOverlay release];
-	[adViewController release];
     [super dealloc];
 }
 

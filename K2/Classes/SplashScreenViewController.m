@@ -11,7 +11,7 @@
 
 @implementation SplashScreenViewController
 
-@synthesize player, tabControllerContainer, photoService;
+@synthesize player, tabControllerContainer;
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -27,15 +27,11 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     
-	photoService = [[GDataServiceGooglePhotos alloc] init];
-	[photoService setUserCredentialsWithUsername:@"k2martialartsottawa" 
-										password:@"k2martialarts@123"];
-	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
-	[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithAlbumsFeed:error:)];
-	
-		
 	//TODO: load from .plist
-	NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"m4v"];
+    //TODO: remove when live, 
+    
+#ifndef DEBUG
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"m4v"];
 	NSURL *url = [NSURL fileURLWithPath:path];
 	player = [[MPMoviePlayerController alloc] initWithContentURL:url];
 	player.view.frame = self.view.frame;
@@ -45,41 +41,15 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlay:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
 	[player play];
-	[super viewDidLoad];		
-}
+#endif
+    
+#ifdef DEBUG
+    
+    [tabControllerContainer performSelector:@selector(removeSplashScreen) withObject:nil afterDelay:1];
 
-- (void)ticket:(GDataServiceTicket *)ticket 
-		finishedWithAlbumsFeed:(GDataFeedPhotoAlbum *)feed 
-		error:(NSError *) error  {
-	
-	if (error)
-		NSLog(@"Error retrieving photo albums: %@", error);
-	else if ([[feed entries] count] == 0) 
-		NSLog(@"No albums found");
-	else {
-		NSArray *albums = [feed entries];
-		for(GDataEntryPhotoAlbum *album in albums)  {
-			NSLog(@"Found album: %@", [[album title] contentStringValue]);
-			NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:[album GPhotoID] albumName:nil photoID:nil kind:@"photo" access:nil];
-			[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithPhotosFeed:error:)];
-		}
-	}	
-}
-
-- (void)ticket:(GDataServiceTicket *)ticket 
-		finishedWithPhotosFeed:(GDataFeedPhoto *)feed 
-		 error:(NSError *)error  {	
-	if (error)
-		NSLog(@"Error retrieveing photo: %@", error);
-	else if ([[feed entries] count] == 0) 
-		NSLog(@"No photos for album: %@", [feed title]);
-	else {
-		NSArray *photos = [feed entries];
-		for (GDataEntryPhoto *photo in photos)  {
-			NSLog(@"Found photo: '%@' with tag '%@'", [[photo title] contentStringValue], 
-													  [[photo photoDescription] contentStringValue]);
-		}
-	}	
+#endif
+    
+    [super viewDidLoad];		
 }
 
 - (void)endPlay:(NSNotification*)notification {

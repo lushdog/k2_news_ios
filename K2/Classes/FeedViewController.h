@@ -2,7 +2,6 @@
 #import <UIKit/UIKit.h>
 #import "MWFeedParser.h"
 #import "Feed.h"
-#import "AdViewController.h"
 
 @interface FeedViewController : UIViewController <MWFeedParserDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate> {
 	
@@ -15,7 +14,6 @@
 	UIImage *defaultFeedImage;	
 	NSDictionary *imageCache;
 	UIImageView *loadingOverlay;
-	AdViewController *adViewController;
 }
 
 @property (nonatomic, retain) MWFeedParser *feedParser;
@@ -26,7 +24,6 @@
 @property (nonatomic, retain) NSDictionary *imageCache;
 @property (nonatomic, retain) Feed *feed;
 @property (nonatomic, retain) IBOutlet UIImageView *loadingOverlay;
-@property (nonatomic, retain) IBOutlet AdViewController *adViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil feed:(Feed *)feedToParse;
 - (void)startParsing:(NSString *)url;

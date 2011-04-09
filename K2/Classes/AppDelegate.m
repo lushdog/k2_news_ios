@@ -18,7 +18,7 @@
 @synthesize window;
 @synthesize tabBarController, homeViewController, homeViewNavigationController, 
 feedNavigationController, categoryViewController, feedList, feedbackViewController, 
-feedbackNavigationController, splashScreenViewController;
+feedbackNavigationController, splashScreenViewController, googleAlbumViewController, photoNavigationController;
 
 
 #pragma mark -
@@ -44,6 +44,8 @@ feedbackNavigationController, splashScreenViewController;
 		[feedList addObject:feed];
 	}
 	
+    //TODO: preload controllers during playing of movie
+    
 	homeViewController = [[FeedViewController alloc] initWithNibName:@"FeedView" bundle:[NSBundle mainBundle] feed:[feedList objectAtIndex:0]];
 	homeViewController.title = @"Home";
 	homeViewController.tabBarItem.image = [UIImage imageNamed:@"home.png"];
@@ -53,15 +55,19 @@ feedbackNavigationController, splashScreenViewController;
 	categoryViewController.feedList = feedList;
 	categoryViewController.title = @"Categories";
 	categoryViewController.tabBarItem.image = [UIImage imageNamed:@"categories.png"];
+    feedNavigationController = [[UINavigationController alloc] initWithRootViewController:categoryViewController];
 	
-	feedNavigationController = [[UINavigationController alloc] initWithRootViewController:categoryViewController];
-	
+    googleAlbumViewController = [[GoogleAlbumViewController alloc] init];
+    googleAlbumViewController.title = @"Photos";
+    googleAlbumViewController.tabBarItem.image = [UIImage imageNamed:@"photos.png"];
+    photoNavigationController = [[UINavigationController alloc] initWithRootViewController:googleAlbumViewController];
+    
 	feedbackViewController = [[FeedbackViewController alloc] initWithNibName:@"FeedbackView" bundle:[NSBundle mainBundle]];
 	feedbackViewController.title = @"Share";
 	feedbackViewController.tabBarItem.image = [UIImage imageNamed:@"more.png"];
 	feedbackNavigationController = [[UINavigationController alloc] initWithRootViewController:feedbackViewController];
 	
-	NSArray *tabItems = [NSArray arrayWithObjects:homeViewNavigationController, feedNavigationController, feedbackNavigationController, nil];
+	NSArray *tabItems = [NSArray arrayWithObjects:homeViewNavigationController, feedNavigationController, googleAlbumViewController, feedbackNavigationController, nil];
 	[tabBarController setViewControllers:tabItems];	
 	[tabItems release];
 	
@@ -136,6 +142,8 @@ feedbackNavigationController, splashScreenViewController;
 	[feedbackViewController release];
 	[feedbackNavigationController release];
 	[splashScreenViewController release];
+    [googleAlbumViewController release];
+    [photoNavigationController release];
     [super dealloc];
 }
 
