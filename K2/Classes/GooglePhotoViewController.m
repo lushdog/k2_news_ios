@@ -14,16 +14,6 @@
 
 @synthesize scrollView, tagLabel, imageView, currentPhoto, googlePhotoAlbums;
 
-/*- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-*/
-
 - (id)initWithAlbums:(NSArray*)photoAlbums startAlbumIndex:(NSUInteger)albumIndex startPhotoIndex:(NSUInteger)photoIndex  {
     
     self = [super init];
@@ -51,10 +41,17 @@
 
 #pragma mark - View lifecycle
 
+- (void)loadView 
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 440)];
+    self.view = view;
+    self.view.autoresizesSubviews = YES;
+    [view release];
+}
+
 - (void)viewDidLoad
 {
-    //TODO: support left swipe and right swipe for photos
-    //      support up swipe and down swipe for albums
+    //TODO: support up swipe and down swipe for albums
     //      add label at bottom for photo tag
     //      add label at top for album tag
     

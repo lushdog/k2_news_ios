@@ -12,39 +12,23 @@
 #import "ImageButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "GooglePhotoViewController.h"
+#import "TestViewController.h"
 
 @implementation GoogleAlbumViewController
 
 @synthesize photoService, tableView, albums;
 
-/*
-// The designated initializer. Override to perform setup that is required before the view is loaded.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-        // Custom initialization
-    }
-    return self;
-}
-*/
 
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView {
-}
-*/
-
-
-
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {   	
+- (void)viewDidLoad {  
     
-    [super viewDidLoad];
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 480) style:UITableViewStyleGrouped];
+    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
     tableView.delegate = self;
     [self.view addSubview:tableView];
+
 	[self startLoadingTable];
-			
+    
+    [super viewDidLoad];
 }
 
 - (void)startLoadingTable  {
@@ -99,10 +83,10 @@
         [image2 addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:image2];
         
-        //TODO: should these be autorelease?
         //[image1 release];
         //[image2 release];
     }
+    
 	[reuseId release];
 	
     GooglePhotoAlbum *photoAlbum = [albums objectAtIndex:[indexPath section]];
@@ -133,11 +117,8 @@
 - (void)imageClicked:(id)sender  {
     
     ImageButton *photoButton = (ImageButton*)sender;
-    GooglePhotoViewController *photoViewController = [[GooglePhotoViewController alloc] initWithAlbums:albums startAlbumIndex:photoButton.currentAlbumIndex startPhotoIndex:photoButton.currentPhotoIndex];
-    photoViewController.view.frame = CGRectMake(0, 0, 320, 480);
+    GooglePhotoViewController *photoViewController = [[[GooglePhotoViewController alloc] initWithAlbums:albums startAlbumIndex:photoButton.currentAlbumIndex startPhotoIndex:photoButton.currentPhotoIndex] autorelease];
     [self.navigationController pushViewController: photoViewController animated:YES];
-    NSLog(@"%@", photoViewController.view.frame);
-    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView  {

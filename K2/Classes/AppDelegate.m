@@ -62,22 +62,21 @@ feedbackNavigationController, splashScreenViewController, googleAlbumViewControl
     googleAlbumViewController.tabBarItem.image = [UIImage imageNamed:@"photos.png"];
     photoNavigationController = [[UINavigationController alloc] initWithRootViewController:googleAlbumViewController];
     
-	feedbackViewController = [[FeedbackViewController alloc] initWithNibName:@"FeedbackView" bundle:[NSBundle mainBundle]];
+    feedbackViewController = [[FeedbackViewController alloc] initWithNibName:@"FeedbackView" bundle:[NSBundle mainBundle]];
 	feedbackViewController.title = @"Share";
 	feedbackViewController.tabBarItem.image = [UIImage imageNamed:@"more.png"];
 	feedbackNavigationController = [[UINavigationController alloc] initWithRootViewController:feedbackViewController];
 	
-	NSArray *tabItems = [NSArray arrayWithObjects:homeViewNavigationController, feedNavigationController, googleAlbumViewController, feedbackNavigationController, nil];
+    NSArray *tabItems = [NSArray arrayWithObjects: homeViewNavigationController, feedNavigationController, photoNavigationController, feedbackNavigationController, nil];
 	[tabBarController setViewControllers:tabItems];	
-	[tabItems release];
 	
-	[window addSubview:tabBarController.view];
+    [window addSubview:tabBarController.view];
 	splashScreenViewController.tabControllerContainer = tabBarController;
 		
 	if ( kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iPhoneOS_3_2 ) {
 		[tabBarController presentModalViewController:splashScreenViewController animated:NO];
 	}
-	
+        
 	[window makeKeyAndVisible];
 	return YES;
 }
