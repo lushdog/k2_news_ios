@@ -12,7 +12,8 @@
 
 @implementation GooglePhotoViewController
 
-@synthesize scrollView, tagLabel, imageView, currentPhoto, googlePhotoAlbums;
+@synthesize scrollView, tagLabel, imageView, googlePhotoAlbums,
+            photoTagLabel, loadingScreen, loadingSpinner;
 
 - (id)initWithAlbums:(NSArray*)photoAlbums startAlbumIndex:(NSUInteger)albumIndex startPhotoIndex:(NSUInteger)photoIndex  {
     
@@ -21,7 +22,6 @@
         currentAlbumIndex = albumIndex;
         currentPhotoIndex = photoIndex;
         googlePhotoAlbums = photoAlbums;
-        currentPhoto = [((GooglePhotoAlbum*)[photoAlbums objectAtIndex:currentAlbumIndex]).photos objectAtIndex:currentPhotoIndex];
     }
     return self;
 }
@@ -51,10 +51,6 @@
 
 - (void)viewDidLoad
 {
-    //TODO: support up swipe and down swipe for albums
-    //      add label at bottom for photo tag
-    //      add label at top for album tag
-    
     scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
     [scrollView setClipsToBounds:YES];
     [scrollView setScrollEnabled:YES];
@@ -64,6 +60,26 @@
     scrollView.delegate = self;
     [self.view addSubview:scrollView];
     
+    photoTagLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    
+    //TODO: load from .plist the font style and color
+    photoTagLabel.textColor = [UIColor redColor];
+    photoTagLabel.backgroundColor = [UIColor blackColor];
+    photoTagLabel.textAlignment = UITextAlignmentCenter;
+    photoTagLabel.alpha = 0.75f;
+    [self.view addSubview:photoTagLabel];
+    
+    loadingScreen = [[UIView alloc] initWithFrame:scrollView.frame];
+    loadingScreen.backgroundColor = [UIColor grayColor];
+    loadingScreen.alpha = 0.75f;
+    [self.view addSubview:loadingScreen];
+    
+    loadingSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    loadingSpinner.frame = CGRectMake(scrollView.center.x - loadingSpinner.frame.size.width/2, scrollView.center.y - loadingSpinner.frame.size.height / 2, loadingSpinner.frame.size.width, loadingSpinner.frame.size.height);
+    loadingSpinner.hidesWhenStopped = YES;
+    [loadingSpinner stopAnimating];
+    [self.view addSubview:loadingSpinner];
+                    
     UISwipeGestureRecognizer *leftSwipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(loadNextImage)];
     [leftSwipe setDirection:UISwipeGestureRecognizerDirectionLeft];
     [scrollView addGestureRecognizer:leftSwipe];
@@ -87,6 +103,8 @@
 
 -(void)loadPreviousImage {
     
+    NSLog(@"Swiped previous image.");
+    
     NSUInteger newPhotoIndex = currentPhotoIndex; 
     NSUInteger newAlbumIndex = currentAlbumIndex;
     
@@ -96,7 +114,7 @@
             
             NSUInteger numPhotosInNewAlbum = [((GooglePhotoAlbum*)[googlePhotoAlbums objectAtIndex:newAlbumIndex]).photos count];
             if (numPhotosInNewAlbum > 0)
-                newPhotoIndex =  - 1;
+                newPhotoIndex =  numPhotosInNewAlbum - 1;
         }//else: at start of photo list
     }
     else {
@@ -106,10 +124,8 @@
     if (newPhotoIndex != currentPhotoIndex || newAlbumIndex != currentAlbumIndex)  {
         currentPhotoIndex = newPhotoIndex;
         currentAlbumIndex = newAlbumIndex;
-        GooglePhotoAlbum *currentAlbum = ((GooglePhotoAlbum*)[googlePhotoAlbums objectAtIndex:currentAlbumIndex]);
-        if ([currentAlbum.photos count] > 0)
+        if ([[self getCurrentAlbum].photos count] > 0)
         {
-            currentPhoto = [currentAlbum.photos objectAtIndex:newPhotoIndex];
             [self loadCurrentPhoto];
         }
     }
@@ -117,11 +133,11 @@
 
 -(void)loadNextImage  {
     
+    NSLog(@"Swiped next image.");
+    
     NSUInteger newPhotoIndex = currentPhotoIndex; 
     NSUInteger newAlbumIndex = currentAlbumIndex;
-    
-    GooglePhotoAlbum *currentAlbum = [googlePhotoAlbums objectAtIndex:currentAlbumIndex];
-    NSUInteger numPhotosInCurrentAlbum = [currentAlbum.photos count];
+    NSUInteger numPhotosInCurrentAlbum = [[self getCurrentAlbum].photos count];
     
     if (currentPhotoIndex == numPhotosInCurrentAlbum - 1 || numPhotosInCurrentAlbum == 0) {
         if (currentAlbumIndex + 1 < [googlePhotoAlbums count])  {
@@ -136,10 +152,8 @@
     if (newPhotoIndex != currentPhotoIndex || newAlbumIndex != currentAlbumIndex)  {
         currentPhotoIndex = newPhotoIndex;
         currentAlbumIndex = newAlbumIndex;
-        GooglePhotoAlbum *currentAlbum = ((GooglePhotoAlbum*)[googlePhotoAlbums objectAtIndex:currentAlbumIndex]);
-        if ([currentAlbum.photos count] > 0)
+        if ([[self getCurrentAlbum].photos count] > 0)
         {
-            currentPhoto = [currentAlbum.photos objectAtIndex:newPhotoIndex];
             [self loadCurrentPhoto];
         }
     }
@@ -150,7 +164,10 @@
 }
 
 - (void) loadCurrentPhoto  {
-    NSArray *pictures = [[currentPhoto mediaGroup] mediaContents]; 
+    [self showLoadingScreen];
+    photoTagLabel.text =  [[[self getCurrentPhoto] photoDescription] contentStringValue];
+    self.title = [[[self getCurrentAlbum].album title] stringValue];
+    NSArray *pictures = [[[self getCurrentPhoto] mediaGroup] mediaContents]; 
     NSString *imageURLString = [[pictures objectAtIndex:0] URLString];
     [self fetchImage:imageURLString];
 }
@@ -168,20 +185,48 @@
 
 - (void)imageFetcher:(GDataHTTPFetcher *)fetcher finishedWithData:(NSData *)data {
 	imageView.image = [UIImage imageWithData:data];
+    [self hideLoadingScreen];
 }
 
 - (void)imageFetcher:(GDataHTTPFetcher *)fetcher failedWithError:(NSError *)error {
     NSLog(@"imageFetcher:%@ failedWithError:%@", fetcher,  error);       
+    [self hideLoadingScreen];
 }
 
+- (void) showLoadingScreen  {
+    
+    loadingScreen.hidden = NO;
+    [loadingSpinner startAnimating];
+    
+}
+
+- (void) hideLoadingScreen  {
+    
+    loadingScreen.hidden = YES;
+    [loadingSpinner stopAnimating];
+    
+}
+
+- (GDataEntryPhoto*) getCurrentPhoto  {
+    
+    return [((GooglePhotoAlbum*)[googlePhotoAlbums objectAtIndex:currentAlbumIndex]).photos objectAtIndex:currentPhotoIndex];
+}
+
+- (GooglePhotoAlbum*) getCurrentAlbum  {
+    
+    return (GooglePhotoAlbum*)[googlePhotoAlbums objectAtIndex:currentAlbumIndex];
+    
+}
 
 - (void)viewDidUnload {
     
     [scrollView dealloc];
     [imageView dealloc];
     [tagLabel dealloc];
-    [currentPhoto dealloc];
     [googlePhotoAlbums dealloc];
+    [loadingScreen dealloc];
+    [loadingSpinner dealloc];
+    [photoTagLabel dealloc];
     
     [super viewDidUnload];
     

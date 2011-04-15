@@ -29,6 +29,8 @@
 	[self startLoadingTable];
     
     [super viewDidLoad];
+    
+    //TODO: fix height of table as can't scroll to end of list
 }
 
 - (void)startLoadingTable  {

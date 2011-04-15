@@ -31,7 +31,7 @@
     //TODO: remove when live, 
     
 #ifndef DEBUG
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"m4v"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"mp4"];
 	NSURL *url = [NSURL fileURLWithPath:path];
 	player = [[MPMoviePlayerController alloc] initWithContentURL:url];
 	player.view.frame = self.view.frame;
