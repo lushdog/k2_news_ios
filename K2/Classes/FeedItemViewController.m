@@ -282,7 +282,7 @@ static UIFont *titleFont;
 #pragma mark -
 #pragma mark FeedItemLink
 
-//TODO: NAV buttons for UIWebView
+//TODO: Back/Forward etc. buttons for UIWebView
 - (void) openFeedItemLink {
 	UIViewController *viewController = [[UIViewController alloc] init];
 	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0,0,320,367)];

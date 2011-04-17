@@ -26,12 +26,12 @@
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
-    
-	//TODO: load from .plist
-    //TODO: remove when live, 
-    
+
 #ifndef DEBUG
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"intro" ofType:@"mp4"];
+	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSString *videoFile = [[NSString alloc] initWithString:[settingsDictionary objectForKey:@"IntroVideo"]];
+    NSArray *chunks = [videoFile componentsSeparatedByString: @"."];
+    NSString *path = [[NSBundle mainBundle] pathForResource:[chunks objectAtIndex:0  ] ofType:[chunks objectAtIndex:1]];
 	NSURL *url = [NSURL fileURLWithPath:path];
 	player = [[MPMoviePlayerController alloc] initWithContentURL:url];
 	player.view.frame = self.view.frame;
@@ -41,6 +41,8 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlay:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
 	[player play];
+    [settingsDictionary release];
+    [videoFile release];
 #endif
     
 #ifdef DEBUG

@@ -76,7 +76,7 @@
 												   [tagName isEqualToString:@"p"]);
 						
 						if (replaceTagWithLineBreak && result.length > 0 && ![scanner isAtEnd])  {
-							[result appendString:@"\n\n"];
+							[result appendString:@"\n"];
 						}
 						else {
 						

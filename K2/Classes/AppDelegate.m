@@ -78,6 +78,12 @@ feedbackNavigationController, splashScreenViewController, googleAlbumViewControl
 	}
         
 	[window makeKeyAndVisible];
+    
+    [settingsDictionary release];
+    [feedNames release];
+    [feedUrls release];
+    [feedImages release];
+    
 	return YES;
 }
 	

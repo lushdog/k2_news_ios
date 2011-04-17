@@ -16,36 +16,66 @@
 
 @implementation GoogleAlbumViewController
 
-@synthesize photoService, tableView, albums;
+@synthesize photoService, tableView, albums, loadingScreen, loadingSpinner
+            ,picasaPassword, picasaUsername;
 
 
 - (void)viewDidLoad {  
     
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStyleGrouped];
+    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStyleGrouped];
     tableView.dataSource = self;
     tableView.delegate = self;
+    tableView.allowsSelection = NO;
     [self.view addSubview:tableView];
 
+    loadingScreen = [[UIView alloc] initWithFrame:tableView.frame];
+    loadingScreen.backgroundColor = [UIColor grayColor];
+    loadingScreen.alpha = 0.75f;
+    [self.view addSubview:loadingScreen];
+    
+    loadingSpinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    loadingSpinner.frame = CGRectMake(tableView.center.x - loadingSpinner.frame.size.width/2, tableView.center.y - loadingSpinner.frame.size.height / 2, loadingSpinner.frame.size.width, loadingSpinner.frame.size.height);
+    loadingSpinner.hidesWhenStopped = YES;
+    [loadingSpinner stopAnimating];
+    [self.view addSubview:loadingSpinner];
+    
 	[self startLoadingTable];
     
     [super viewDidLoad];
-    
-    //TODO: fix height of table as can't scroll to end of list
+}
+
+
+//TODO: create base class for all screens that have loading screen
+- (void) showLoadingScreen {
+    loadingScreen.hidden = NO;
+    [loadingSpinner startAnimating];
+}
+
+- (void) hideLoadingScreen {
+    loadingScreen.hidden = YES;
+    [loadingSpinner stopAnimating];
 }
 
 - (void)startLoadingTable  {
     
-    //TODO: show loading screen
-	
+    [self showLoadingScreen];
+    
 	albums = [[NSMutableArray alloc] initWithCapacity:5];
 	
 	photoService = [[GDataServiceGooglePhotos alloc] init];
-    //TODO:put username and pass as props that get filles by .plist values
-	[photoService setUserCredentialsWithUsername:@"k2martialartsottawa" 
-										password:@"k2martialarts@123"];
-	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
+    
+    NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+	NSDictionary *picasaCreds = [[NSDictionary alloc] initWithDictionary:[settingsDictionary objectForKey:@"PicasaCreds"]];
+    picasaUsername = (NSString*)[picasaCreds objectForKey:@"PicasaUsername"];
+    picasaPassword = (NSString*)[picasaCreds objectForKey:@"PicasaPassword"];
+    
+    [photoService setUserCredentialsWithUsername:picasaUsername 
+										password:picasaPassword];
+	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:picasaUsername albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
 	[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithAlbumsFeed:error:)];
     
+    [settingsDictionary release];
+    [picasaCreds release];
 }
 
 #pragma mark -
@@ -198,11 +228,7 @@
 //- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 //- (NSIndexPath *)tableView:(UITableView *)tableView willDeselectRowAtIndexPath:(NSIndexPath *)indexPath __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 // Called after the user changes the selection.
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    
-    //TODO: return white background so no selection look
-    
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
 
 // Editing
@@ -263,7 +289,7 @@ error:(NSError *) error  {
 			newAlbum.album = album;
 			[albums addObject:newAlbum];
 			
-			NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:@"k2martialartsottawa" albumID:[album GPhotoID] albumName:nil photoID:nil kind:nil access:nil];
+			NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:picasaUsername albumID:[album GPhotoID] albumName:nil photoID:nil kind:nil access:nil];
 			[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithPhotosFeed:error:)];
 		}
 	}
@@ -304,9 +330,8 @@ error:(NSError *)error  {
     numAlbumsLeftToParse--;
     if (numAlbumsLeftToParse == 0)  {
         
-        //TODO: Hide loading screen
-        
         [tableView reloadData];
+        [self hideLoadingScreen];
         
         for (GooglePhotoAlbum *album in albums)  {
             NSLog(@"album name: %@", [album.album title]);
@@ -349,8 +374,12 @@ error:(NSError *)error  {
 - (void)dealloc {
 	
 	[photoService dealloc];
+    [loadingSpinner dealloc];
+    [loadingScreen dealloc];
 	[tableView dealloc];
 	[albums dealloc];
+    [picasaPassword dealloc];
+    [picasaUsername dealloc];
     [super dealloc];
 }
 

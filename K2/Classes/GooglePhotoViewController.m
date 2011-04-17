@@ -43,7 +43,7 @@
 
 - (void)loadView 
 {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 440)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 420)];
     self.view = view;
     self.view.autoresizesSubviews = YES;
     [view release];

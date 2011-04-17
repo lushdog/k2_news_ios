@@ -248,7 +248,8 @@
 	[controller setToRecipients:[NSArray arrayWithObject:to]];
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-	
+    
+    [settingsDictionary release];
 }
 
 - (void)showShareAppMailController {
@@ -267,7 +268,7 @@
 	[controller setMessageBody:contents isHTML:YES]; 
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-	
+    [settingsDictionary release];
 }
 
 - (void)showSendCouponMailController {
@@ -297,13 +298,14 @@
 	
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-	
+    [settingsDictionary release];
 }
 
 -(void)openFacebook {
 	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
 	NSString *facebookUrl = [settingsDictionary objectForKey:@"FacebookUrl"];
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:facebookUrl]];	
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:facebookUrl]];
+    [settingsDictionary release];
 }
 
 -(void) callNumberOne {
@@ -312,6 +314,7 @@
 	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
 	NSLog(@"Phoning: %@", fullPhoneNumber);
+    [settingsDictionary release];
 }
 
 
@@ -321,6 +324,7 @@
 	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
 	NSLog(@"Phoning: %@", fullPhoneNumber);
+    [settingsDictionary release];
 }
 
 - (void)didReceiveMemoryWarning {
