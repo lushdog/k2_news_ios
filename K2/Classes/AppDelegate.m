@@ -12,6 +12,7 @@
 #import "TabBarViewController.h"
 #import <MessageUI/MessageUI.h> 
 #import <MediaPlayer/MediaPlayer.h>
+#import "AppSettings.h"
 
 @implementation AppDelegate
 
@@ -33,11 +34,10 @@ feedbackNavigationController, splashScreenViewController, googleAlbumViewControl
 	
 	tabBarController = [[TabBarViewController alloc] initWithNibName:nil bundle:nil];	
 	
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSArray *feedNames = [[NSArray alloc] initWithArray:[settingsDictionary objectForKey:@"FeedNames"]];
-	NSArray *feedUrls =[[NSArray alloc] initWithArray:[settingsDictionary objectForKey:@"FeedUrls"]];
-	NSArray *feedImages = [[NSArray alloc] initWithArray:[settingsDictionary objectForKey:@"FeedImages"]];
-	
+	NSArray *feedNames = [AppSettings feedNames];
+	NSArray *feedUrls = [AppSettings feedURLs];
+	NSArray *feedImages = [AppSettings feedImages];
+
 	feedList = [[NSMutableArray alloc] init];
 	for (int i=0; i < feedNames.count; i++) {
 		Feed *feed = [[Feed alloc] initWithName:(NSString *)[feedNames objectAtIndex:i] url:(NSString *)[feedUrls objectAtIndex:i] image:(NSString *)[feedImages objectAtIndex:i]];
@@ -79,12 +79,7 @@ feedbackNavigationController, splashScreenViewController, googleAlbumViewControl
         
 	[window makeKeyAndVisible];
     
-    [settingsDictionary release];
-    [feedNames release];
-    [feedUrls release];
-    [feedImages release];
-    
-	return YES;
+    return YES;
 }
 	
 					   

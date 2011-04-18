@@ -13,6 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "GooglePhotoViewController.h"
 #import "TestViewController.h"
+#import "AppSettings.h"
 
 @implementation GoogleAlbumViewController
 
@@ -64,18 +65,13 @@
 	
 	photoService = [[GDataServiceGooglePhotos alloc] init];
     
-    NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSDictionary *picasaCreds = [[NSDictionary alloc] initWithDictionary:[settingsDictionary objectForKey:@"PicasaCreds"]];
-    picasaUsername = (NSString*)[picasaCreds objectForKey:@"PicasaUsername"];
-    picasaPassword = (NSString*)[picasaCreds objectForKey:@"PicasaPassword"];
+    picasaUsername = [AppSettings picasaUsername];
+    picasaPassword = [AppSettings picasaPassword];
     
     [photoService setUserCredentialsWithUsername:picasaUsername 
 										password:picasaPassword];
 	NSURL *feedUrl = [GDataServiceGooglePhotos photoFeedURLForUserID:picasaUsername albumID:nil albumName:nil photoID:nil kind:@"album" access:nil];
 	[photoService fetchFeedWithURL:feedUrl delegate:self didFinishSelector:@selector(ticket:finishedWithAlbumsFeed:error:)];
-    
-    [settingsDictionary release];
-    [picasaCreds release];
 }
 
 #pragma mark -

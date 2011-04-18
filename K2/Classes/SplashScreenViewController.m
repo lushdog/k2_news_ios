@@ -8,6 +8,7 @@
 #import "SplashScreenViewController.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "GDataPhotos.h"
+#import "AppSettings.h"
 
 @implementation SplashScreenViewController
 
@@ -28,9 +29,7 @@
 - (void)viewDidLoad {
 
 #ifndef DEBUG
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *videoFile = [[NSString alloc] initWithString:[settingsDictionary objectForKey:@"IntroVideo"]];
-    NSArray *chunks = [videoFile componentsSeparatedByString: @"."];
+    NSArray *chunks = [[AppSettings introVideo] componentsSeparatedByString: @"."];
     NSString *path = [[NSBundle mainBundle] pathForResource:[chunks objectAtIndex:0  ] ofType:[chunks objectAtIndex:1]];
 	NSURL *url = [NSURL fileURLWithPath:path];
 	player = [[MPMoviePlayerController alloc] initWithContentURL:url];
@@ -41,8 +40,6 @@
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endPlay:) name:MPMoviePlayerPlaybackDidFinishNotification object:player];
 	[player play];
-    [settingsDictionary release];
-    [videoFile release];
 #endif
     
 #ifdef DEBUG

@@ -7,6 +7,7 @@
 
 #import "FeedbackViewController.h"
 #import <MessageUI/MessageUI.h> 
+#import "AppSettings.h"
 
 @implementation FeedbackViewController
 
@@ -234,30 +235,22 @@
 }
 
 - (void)showFeedBackMailController {
-	
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *subject = [[settingsDictionary objectForKey:@"FeedBack"] objectForKey:@"Subject"];
-	NSString *to = [[settingsDictionary objectForKey:@"FeedBack"] objectForKey:@"To"];
-	
 	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
 	controller.mailComposeDelegate = self;
 	[controller setBccRecipients:nil];
 	[controller setCcRecipients:nil];
-	[controller setSubject:subject];
+	[controller setSubject:[AppSettings feedbackSubject]];
 	[controller setMessageBody:@"" isHTML:NO]; 
-	[controller setToRecipients:[NSArray arrayWithObject:to]];
+	[controller setToRecipients:[NSArray arrayWithObject:[AppSettings feedbackToAddress]]];
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-    
-    [settingsDictionary release];
 }
 
 - (void)showShareAppMailController {
 	
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *subject = [[settingsDictionary objectForKey:@"ShareApp"] objectForKey:@"Subject"];
-	NSString *body = [[settingsDictionary objectForKey:@"ShareApp"] objectForKey:@"Body"];
-	NSString *appUrl = [settingsDictionary objectForKey:@"iTunesLink"];
+	NSString *subject = [AppSettings shareAppSubject];
+	NSString *body = [AppSettings shareAppBody];
+	NSString *appUrl = [AppSettings itunesURL];
 	NSString *contents = [NSString stringWithFormat:@"%@%@<a href=\"%@\">%@</a>", body, @"\n\n", appUrl, appUrl];
 	
 	MFMailComposeViewController* controller = [[MFMailComposeViewController alloc] init];
@@ -268,15 +261,13 @@
 	[controller setMessageBody:contents isHTML:YES]; 
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-    [settingsDictionary release];
 }
 
 - (void)showSendCouponMailController {
 	
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *subject = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"Subject"];
-	//NSString *imageUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"ImageUrl"];
-	NSString *linkUrl = [[settingsDictionary objectForKey:@"Coupon"] objectForKey:@"LinkUrl"];
+	NSString *subject = [AppSettings couponSubject];
+	//NSString *imageUrl = [AppSettings couponImageURL];
+	NSString *linkUrl = [AppSettings couponLinkURL];
 	NSString *contents = [NSString stringWithFormat:@"Here's something I'd think you'd be interested in.  Click <a href=\"%@\">here</a> to visit the website.", linkUrl];
 	
 	//NSURLRequest *theRequest=[NSURLRequest requestWithURL:[NSURL URLWithString:imageUrl]
@@ -298,33 +289,25 @@
 	
 	[self presentModalViewController:controller animated:YES];
 	[controller release];
-    [settingsDictionary release];
 }
 
 -(void)openFacebook {
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *facebookUrl = [settingsDictionary objectForKey:@"FacebookUrl"];
+	NSString *facebookUrl = [AppSettings facebookURL];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:facebookUrl]];
-    [settingsDictionary release];
 }
 
 -(void) callNumberOne {
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *phoneNumber = [settingsDictionary objectForKey:@"PhoneNumber1"];
+	NSString *phoneNumber = [AppSettings phoneNumber1];
 	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
-	NSLog(@"Phoning: %@", fullPhoneNumber);
-    [settingsDictionary release];
-}
+	NSLog(@"Phoning: %@", fullPhoneNumber);}
 
 
 -(void) callNumberTwo {
-	NSDictionary *settingsDictionary = [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
-	NSString *phoneNumber = [settingsDictionary objectForKey:@"PhoneNumber2"];
+	NSString *phoneNumber = [AppSettings phoneNumber2];
 	NSString *fullPhoneNumber = [NSString stringWithFormat:@"tel:%@", phoneNumber];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:fullPhoneNumber]];	
 	NSLog(@"Phoning: %@", fullPhoneNumber);
-    [settingsDictionary release];
 }
 
 - (void)didReceiveMemoryWarning {

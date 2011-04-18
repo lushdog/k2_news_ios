@@ -90,7 +90,7 @@
 	
 	static NSString *CellIdentifier = @"CategoryViewCell";
 	CategoryViewCell *cell = (CategoryViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	
+    
 	if (cell == nil) {		
 		NSArray *topLevelObjects = [[NSBundle mainBundle]loadNibNamed:CellIdentifier owner:nil options:nil];
 		cell = (CategoryViewCell*)[topLevelObjects objectAtIndex:0];	
