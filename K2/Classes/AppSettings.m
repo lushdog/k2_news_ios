@@ -7,6 +7,7 @@
 //
 
 #import "AppSettings.h"
+#import "NSString+UIColor.h"
 
 
 @implementation AppSettings 
@@ -53,16 +54,15 @@
 }
 
 + (NSArray *)feedImages {
-     return [[[NSArray alloc] initWithArray:[[self settingsDictionary] objectForKey:@"FeedNames"]] autorelease];
+    return [[self settingsDictionary] objectForKey:@"FeedImages"];
 }
 
 + (NSArray *)feedURLs {
-    return [[[NSArray alloc] initWithArray:[[self settingsDictionary] objectForKey:@"FeedUrls"]] autorelease];
+    return [[self settingsDictionary] objectForKey:@"FeedUrls"];
 }
 
 + (NSArray *)feedNames {
-    return [[[NSArray alloc] initWithArray:[[self settingsDictionary] objectForKey:@"FeedImages"]] autorelease];
-}
+    return [[self settingsDictionary] objectForKey:@"FeedNames"];}
 
 + (NSString *)introVideo {
     return [[self settingsDictionary] objectForKey:@"IntroVideo"];
@@ -96,19 +96,19 @@
 }
 
 + (UIColor *)backgroundColor {
-    
+    return  [(NSString*)[[self settingsDictionary] objectForKey:@"BackgroundColor"] toUIColor];
 }
 
 + (UIColor *)rowColor {
-    
+    return  [(NSString*)[[self settingsDictionary] objectForKey:@"RowColor"] toUIColor];
 }
 
 + (UIColor *)textColor1 {
-    
+    return  [(NSString*)[[self settingsDictionary] objectForKey:@"TextColor1"] toUIColor];
 }
 
 + (UIColor *)textColor2 {
-    
+    return  [(NSString*)[[self settingsDictionary] objectForKey:@"TextColor2"] toUIColor];
 }
 
 

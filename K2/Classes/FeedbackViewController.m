@@ -63,60 +63,44 @@
 	
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];	
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [AppSettings backgroundColor];
+    
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
+        label.font = [UIFont systemFontOfSize:17.0f];
+        label.textColor = [AppSettings textColor1];
+        label.backgroundColor = [AppSettings rowColor];
+        
 		switch (rowNum) {
 			case 0: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Send Us Your Feedback";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];
 				break;
-				
 			}
 			case 1: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Share App With A Friend";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];
 				break;
-				
-			}
+            }
 			case 2: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Give a Free Trial";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];			
 				break;
 			}				
 			case 3: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Facebook Page";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];			
 				break;
 			}
 			case 4: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Call Ottawa Dojo";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];			
 				break;
 			}
 			case 5: {
-				UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
 				label.text = @"Call Barrhaven Dojo";
-				label.font = [UIFont systemFontOfSize:17.0f];
-				[cell.contentView addSubview:label];
-				[label release];			
-				break;
 			}
 			default:
 				break;
 		}
+    
+        [cell.contentView addSubview:label];
+        [label release];
+        
 	}	
 	
 	return cell;
@@ -198,8 +182,6 @@
 		[self callNumberOne];
 	else if (indexPath.row == 5)
 		[self callNumberTwo];
-
-	
 }
 
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);

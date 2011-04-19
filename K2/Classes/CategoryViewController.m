@@ -3,6 +3,7 @@
 #import "FeedViewController.h"
 #import "Feed.h"
 #import "CategoryViewCell.h"
+#import "AppSettings.h"
 
 @implementation CategoryViewController
 
@@ -94,6 +95,8 @@
 	if (cell == nil) {		
 		NSArray *topLevelObjects = [[NSBundle mainBundle]loadNibNamed:CellIdentifier owner:nil options:nil];
 		cell = (CategoryViewCell*)[topLevelObjects objectAtIndex:0];	
+        cell.backgroundColor = [AppSettings rowColor];
+        cell.categoryLabel.textColor = [AppSettings textColor1];
 	}
 		
 	if (feedList.count > 0) {
@@ -165,6 +168,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     
+    categoryTableView.backgroundColor = [AppSettings backgroundColor];
 	[super viewDidLoad];
 				
 }

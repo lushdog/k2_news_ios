@@ -29,7 +29,7 @@
 
 + (NSArray *)feedImages;
 + (NSArray *)feedURLs;
-+ (NSArra *)feedNames;
++ (NSArray *)feedNames;
 
 + (NSString *)introVideo;
 

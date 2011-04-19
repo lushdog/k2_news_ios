@@ -9,6 +9,7 @@
 #import "GooglePhotoViewController.h"
 #import "GDataPhotos.h"
 #import "GooglePhotoAlbum.h"
+#import "AppSettings.h"
 
 @implementation GooglePhotoViewController
 
@@ -56,15 +57,12 @@
     [scrollView setScrollEnabled:YES];
     [scrollView setMinimumZoomScale:1.0f];
     [scrollView setMaximumZoomScale:4.0f];
-    [scrollView setBackgroundColor:[UIColor blackColor]];
+    [scrollView setBackgroundColor:[AppSettings backgroundColor]];
     scrollView.delegate = self;
     [self.view addSubview:scrollView];
     
-    photoTagLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-    
-    //TODO: load from .plist the font style and color
-    photoTagLabel.textColor = [UIColor redColor];
-    photoTagLabel.backgroundColor = [UIColor blackColor];
+    photoTagLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];photoTagLabel.textColor = [AppSettings textColor1];
+    photoTagLabel.backgroundColor = [AppSettings backgroundColor];
     photoTagLabel.textAlignment = UITextAlignmentCenter;
     photoTagLabel.alpha = 0.75f;
     [self.view addSubview:photoTagLabel];
@@ -91,7 +89,7 @@
     [rightSwipe release];
     
     imageView = [[UIImageView alloc] initWithFrame:scrollView.frame];
-    [imageView setBackgroundColor:[UIColor blackColor]];
+    [imageView setBackgroundColor:[AppSettings backgroundColor]];
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
     
     [scrollView addSubview:imageView];
