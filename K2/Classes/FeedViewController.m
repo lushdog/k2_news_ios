@@ -6,6 +6,8 @@
 #import "asyncimageview.h"
 #import "Feed.h"
 #import "FeedItemViewController.h"
+#import "AppSettings.h"
+#import <QuartzCore/QuartzCore.h>
 
 @implementation FeedViewController
 
@@ -103,6 +105,8 @@
 	if (cell == nil) {		
 		NSArray *topLevelObjects = [[NSBundle mainBundle]loadNibNamed:CellIdentifier owner:nil options:nil];
 		cell = (FeedViewCell*)[topLevelObjects objectAtIndex:0];
+        cell.titleLabel.textColor = [AppSettings textColor1];
+        cell.descriptionLabel.textColor = [AppSettings textColor2];
 	}
 	else  {
 		AsyncImageView* oldImage = (AsyncImageView*)[cell.contentView viewWithTag:999];
@@ -115,7 +119,7 @@
 	if (parsedFeeds.count > 0) {
 		MWFeedItem *item = [parsedFeeds objectAtIndex:indexPath.row];
 		if (item) {
-			cell.titleLabel.text = item.title;
+            cell.titleLabel.text = item.title;
 			cell.descriptionLabel.text = [item.summary stringByConvertingHTMLToPlainText];	
 			
 			if (item.img == nil || item.img == @"") {
@@ -266,6 +270,7 @@
 	[self startParsing:feed.feedUrl];
 	
 	imageCache = [[NSMutableDictionary alloc] initWithCapacity:10];	
+    feedTableView.backgroundColor = [AppSettings rowColor];
 }
 
 

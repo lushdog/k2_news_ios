@@ -29,12 +29,6 @@
 }
 */
 
-/*
-// Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-*/
 
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -62,13 +56,13 @@
 	if (cell == nil)  {
 	
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier] autorelease];	
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.backgroundColor = [AppSettings backgroundColor];
+		//cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.backgroundColor = [AppSettings rowColor];
     
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 200, 30)];
         label.font = [UIFont systemFontOfSize:17.0f];
         label.textColor = [AppSettings textColor1];
-        label.backgroundColor = [AppSettings rowColor];
+        label.backgroundColor = [UIColor clearColor];
         
 		switch (rowNum) {
 			case 0: {
@@ -307,6 +301,7 @@
 
 -(void)viewDidLoad  {
     [super viewDidLoad];
+    feedbackTableView.backgroundColor = [AppSettings backgroundColor];
 		
 }
 

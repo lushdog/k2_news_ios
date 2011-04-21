@@ -23,7 +23,8 @@
 
 - (void)viewDidLoad {  
     
-    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStyleGrouped];
+    tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStylePlain];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.allowsSelection = NO;
@@ -101,15 +102,15 @@
         cell.backgroundColor = [AppSettings backgroundColor];
         
         ImageButton *image1 = [[ImageButton alloc] initWithFrame:CGRectMake(30, 0, 110, 110)];
-        [[image1 layer] setBorderColor: [[AppSettings rowColor] CGColor]];
-        [[image1 layer] setBorderWidth: 1.0];
+        //[[image1 layer] setBorderColor: [[AppSettings rowColor] CGColor]];
+        //[[image1 layer] setBorderWidth: 1.0];
         [image1 setTag:1];
         [image1 addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:image1];
         
         ImageButton *image2 = [[ImageButton alloc] initWithFrame:CGRectMake(160, 0, 110, 110)];
-        [image2.layer setBorderColor: [[AppSettings rowColor] CGColor]];
-        [image2.layer setBorderWidth: 1.0];
+        //[image2.layer setBorderColor: [[AppSettings rowColor] CGColor]];
+        //[image2.layer setBorderWidth: 1.0];
         [image2 setTag:2];
         [image2 addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell addSubview:image2];
