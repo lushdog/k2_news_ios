@@ -102,6 +102,8 @@
         cell.backgroundColor = [AppSettings backgroundColor];
         
         ImageButton *image1 = [[ImageButton alloc] initWithFrame:CGRectMake(30, 0, 110, 110)];
+        [image1 setContentMode:UIViewContentModeTop];
+
         //[[image1 layer] setBorderColor: [[AppSettings rowColor] CGColor]];
         //[[image1 layer] setBorderWidth: 1.0];
         [image1 setTag:1];
@@ -109,6 +111,8 @@
         [cell addSubview:image1];
         
         ImageButton *image2 = [[ImageButton alloc] initWithFrame:CGRectMake(160, 0, 110, 110)];
+        [image2 setContentMode:UIViewContentModeTop];
+
         //[image2.layer setBorderColor: [[AppSettings rowColor] CGColor]];
         //[image2.layer setBorderWidth: 1.0];
         [image2 setTag:2];
@@ -125,7 +129,7 @@
    
     GDataEntryPhoto *photo1 = (GDataEntryPhoto*)[photoAlbum.photos objectAtIndex:rowNum * 2];
     NSArray *thumbs1 = [[photo1 mediaGroup] mediaThumbnails];
-    NSString *thumbURLString1 = [[thumbs1 objectAtIndex:0] URLString];
+    NSString *thumbURLString1 = [[thumbs1 objectAtIndex:1] URLString];
     ImageButton *image1 = (ImageButton*)[cell viewWithTag:1];
     [image1 setPhoto:photo1];
     [image1 setCurrentAlbumIndex:[indexPath section]];
@@ -135,7 +139,7 @@
     if ([photoAlbum.photos count] > rowNum * 2 + 1 )  {
         GDataEntryPhoto *photo2 = (GDataEntryPhoto*)[photoAlbum.photos objectAtIndex:rowNum * 2 + 1];
         NSArray *thumbs2 = [[photo2 mediaGroup] mediaThumbnails];
-        NSString *thumbURLString2 = [[thumbs2 objectAtIndex:0] URLString];
+        NSString *thumbURLString2 = [[thumbs2 objectAtIndex:1] URLString];
         ImageButton *image2 = (ImageButton*)[cell viewWithTag:2];
         [image2 setPhoto:photo2];
         [image2 setCurrentAlbumIndex:[indexPath section]];
@@ -345,8 +349,7 @@ error:(NSError *)error  {
 - (void)imageFetcher:(GDataHTTPFetcher *)fetcher finishedWithData:(NSData *)data {
 	
     UIButton *button = (UIButton*)[fetcher userData];
-    [button setBackgroundImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-	
+    [button setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];	    
 }
 		
 - (void)imageFetcher:(GDataHTTPFetcher *)fetcher failedWithError:(NSError *)error {
