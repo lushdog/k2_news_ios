@@ -30,7 +30,8 @@
 	if (data!=nil) { [data release]; }
 	
 	NSURLRequest* request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
-	connection = [[NSURLConnection alloc] initWithRequest: request delegate: self startImmediately: NO];
+	
+    //connection = [[NSURLConnection alloc] initWithRequest: request delegate: self startImmediately: NO];
 	
 	//TODO:BUG: bug in that some images don't load and disappear when async loading enabled below
 	
@@ -62,7 +63,7 @@
 	UIImageView* imageView = [[[UIImageView alloc] initWithImage:[UIImage imageWithData:data]] autorelease];
 	//make sizing choices based on your needs, experiment with these. maybe not all the calls below are needed.
 	imageView.contentMode = UIViewContentModeScaleAspectFit;
-	imageView.autoresizingMask = ( UIViewAutoresizingFlexibleWidth || UIViewAutoresizingFlexibleHeight );
+	imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self addSubview:imageView];
 	imageView.frame = self.bounds;
 	[imageView setNeedsLayout];

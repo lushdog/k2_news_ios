@@ -40,7 +40,7 @@ feedbackNavigationController, splashScreenViewController, googleAlbumViewControl
 
 	feedList = [[NSMutableArray alloc] init];
 	for (int i=0; i < feedNames.count; i++) {
-		Feed *feed = [[Feed alloc] initWithName:(NSString *)[feedNames objectAtIndex:i] url:(NSString *)[feedUrls objectAtIndex:i] image:(NSString *)[feedImages objectAtIndex:i]];
+		Feed *feed = [[[Feed alloc] initWithName:(NSString *)[feedNames objectAtIndex:i] url:(NSString *)[feedUrls objectAtIndex:i] image:(NSString *)[feedImages objectAtIndex:i]] autorelease];
 		[feedList addObject:feed];
 	}
 	

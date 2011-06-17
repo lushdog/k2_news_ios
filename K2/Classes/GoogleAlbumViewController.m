@@ -289,7 +289,7 @@ error:(NSError *) error  {
 			
 			NSLog(@"Found album: %@", [[album title] contentStringValue]);
 			
-			GooglePhotoAlbum *newAlbum = [[GooglePhotoAlbum alloc] init];
+			GooglePhotoAlbum *newAlbum = [[[GooglePhotoAlbum alloc] init] autorelease];
 			newAlbum.album = album;
 			[albums addObject:newAlbum];
 			

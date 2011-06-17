@@ -34,7 +34,7 @@
 #pragma mark NSObject
 
 - (id)initWithFeedURL:(NSString *)feedURL {
-	if (self = [super init]) {
+	if (self == [super init]) {
 		
 		// URI Scheme
 		// http://en.wikipedia.org/wiki/Feed:_URI_scheme
@@ -678,7 +678,7 @@
 	
 	// Create enclosure
 	NSDictionary *enclosure = nil;
-	NSString *encURL, *encType;
+	NSString *encURL = nil, *encType = nil;
 	NSNumber *encLength;
 	if (attributes) {
 		switch (feedType) {
@@ -831,17 +831,18 @@
 			[scanner setScanLocation:[scanner scanLocation] + 5];
 			NSCharacterSet *endSrcTag = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
 			[scanner scanUpToCharactersFromSet:endSrcTag intoString:&imgUrl];	
-			[NSCharacterSet release];
 		}
 	}
 	
 	NSString *trackingImage = @"https://blogger.googleusercontent.com/tracker/";
-	NSRange range = [imgUrl rangeOfString : trackingImage];	
-	if (range.location != NSNotFound) {
-		imgUrl = nil;
-	}
 	
-	[NSScanner release];
+    if (imgUrl != nil) {
+        NSRange range = [imgUrl rangeOfString : trackingImage];	
+        if (range.location != NSNotFound) {
+            imgUrl = nil;
+        }
+	}
+    
 	return imgUrl;
 }
 

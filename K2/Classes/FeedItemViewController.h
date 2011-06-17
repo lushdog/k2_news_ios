@@ -1,6 +1,6 @@
 
 #import <UIKit/UIKit.h>
-#import "MWFeedItem.h";
+#import "MWFeedItem.h"
 #import "asyncimageview.h"
 #import "Feed.h"
 

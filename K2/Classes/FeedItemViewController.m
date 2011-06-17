@@ -284,8 +284,8 @@ static UIFont *titleFont;
 
 //TODO: Back/Forward etc. buttons for UIWebView
 - (void) openFeedItemLink {
-	UIViewController *viewController = [[UIViewController alloc] init];
-	UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectMake(0,0,320,367)];
+	UIViewController *viewController = [[[UIViewController alloc] init] autorelease];
+	UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0,0,320,367)] autorelease];
 	webView.delegate = self;
 	webView.scalesPageToFit = YES;
 	webView.multipleTouchEnabled = YES;

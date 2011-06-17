@@ -26,7 +26,7 @@
 }
 
 + (NSDictionary *)settingsDictionary  {
-    return [[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]];
+    return [[[NSDictionary alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Config" ofType:@"plist"]] autorelease];
 }
 
 + (NSString *)couponImageURL  {

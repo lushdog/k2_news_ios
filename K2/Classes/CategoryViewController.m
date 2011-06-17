@@ -46,10 +46,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	Feed *selectedFeed = [feedList objectAtIndex:indexPath.row];
-	FeedViewController *feedViewController = [[FeedViewController alloc] initWithNibName:@"FeedView" bundle:[NSBundle mainBundle] feed:selectedFeed];
+	FeedViewController *feedViewController = [[[FeedViewController alloc] initWithNibName:@"FeedView" bundle:[NSBundle mainBundle] feed:selectedFeed] autorelease];
 	feedViewController.title = selectedFeed.feedName;
 	[self.navigationController pushViewController:feedViewController animated:YES];
-	[selectedFeed release];
 }
 
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_0);
